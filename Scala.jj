@@ -1,0 +1,189 @@
+// -> Aluno: Flávio Santos
+// -> Linguagem: Scala
+
+options {
+    STATIC = false ;
+}
+
+PARSER_BEGIN(Scala)
+
+import java.io.IOException;
+
+class Scala {
+  public static void main(String args[]) throws ParseException, TokenMgrError, IOException{
+      Scala parser = new Scala(System.in);
+      parser.Start();
+  }
+}
+
+PARSER_END(Scala)
+
+SKIP : { " " | "\n" | "\r" | "\r\n" | "\t"}
+
+TOKEN : {
+    // Tokens Auxiliares
+    <#HEXA_DIGIT: ["0"-"9"] | ["A"-"F"] | ["a"-"f"]>
+    | <#DIGIT: ["0"-"9"]>
+    | <#UPPER: ["A"-"Z"] | ["$"] | ["_"]>
+    | <#LOWER: ["a"-"z"]>
+    | <#LETTER: (<UPPER> | <LOWER>)>
+    | <#PAREN: ["("] | [")"] | ["["] | ["]"] | ["{"] | ["}"]>
+    | <#DELIM: ["`"] | ["'"] | ["\""] | ["."] | [";"] | [","]>
+
+    | <#OPCHAR: ["!", "#", "%", "&", "*", "+", "-", "/", ":", "<", "=", ">", "?", "@", "\\", "^", "|", "~"]>
+    | <#PRINTABLE_CHAR: ["\u0020" - "\u007F"]>
+    | <#CHAR_ESCAPE_SEQ: ["\b"] | ["\t"] | ["\n"] | ["\f"] | ["\r"] | ["\""] | ["\\"] | ["\'"]>
+    | <CHARACTER_LITERAL: "'" (<PRINTABLE_CHAR> | <CHAR_ESCAPE_SEQ>) "'">
+
+    // Palavras Reservadas
+    | <ABSTRACT: "abstract">
+    | <CASE: "case">
+    | <CATCH: "catch">
+    | <CLASS: "class">
+    | <DEF: "def">
+    | <DO: "do">
+    | <ELSE: "else">
+    | <EXTENDS: "extends">
+    | <FALSE: "false">
+    | <FINAL: "final">
+    | <FINALLY: "finally">
+    | <FOR: "for">
+    | <FORSOME: "forsome">
+    | <IF: "if">
+    | <IMPLICIT: "implicit">
+    | <IMPORT: "import">
+    | <LAZY: "lazy">
+    | <MACRO: "macro">
+    | <MATCH: "match">
+    | <NEW: "new">
+    | <NULL: "null">
+    | <OBJECT: "object">
+    | <OVERRIDE: "override">
+    | <PACKAGE: "package">
+    | <PRIVATE: "private">
+    | <PROTECTED: "protected">
+    | <RETURN: "return">
+    | <SEALED: "sealed">
+    | <SUPER: "super">
+    | <THIS: "this">
+    | <THROW: "throw">
+    | <TRAIT: "trait">
+    | <TRY: "try">
+    | <TRUE: "true">
+    | <TYPE: "type">
+    | <VAL: "val">
+    | <VAR: "var">
+    | <WHILE: "while">
+    | <WITH: "with">
+    | <YIELD: "yield">
+    | <UNDERSCORE: "_">
+    | <COLON: ":">
+    | <EQUALS: "=">
+    | <RIGHT_ARROW: "=>">
+    | <LEFT_ARROW: "<-">
+    | <UPPER_BOUND: "<:">
+    | <VIEW_BOUND: "<%">
+    | <LOWER_BOUND: ">:">
+    | <HASHTAG: "#">
+    | <ARROBA: "@">
+
+    // Parênteses
+    | <LEFT_PARENTHESIS: "(">
+    | <RIGHT_PARENTHESIS: ")">
+    | <LEFT_BRACKETS: "[">
+    | <RIGHT_BRACKETS: "]">
+    | <LEFT_KEY: "{">
+    | <RIGHT_KEY: "}">
+
+    // Delimitadores
+    | <BACKTRICK: "`">
+    | <APOSTROPHE: "'">
+    | <DOUBLE_QUOTE: "\"">
+    | <DOT: ".">
+    | <SEMICOLON: ";">
+    | <COMMA: ",">
+
+    // Literais Booleanos
+    | <BOOLEAN_LITERAL: "true" | "false">
+
+}
+
+void Start() :
+{ Token t; }
+{
+    (
+        // Palavras Reservadas
+        t = <ABSTRACT> {System.out.println("ABSTRACT " + t.image);}
+        | t = <CASE> {System.out.println("CASE " + t.image);}
+        | t = <CLASS> {System.out.println("CLASS " + t.image);}
+        | t = <DEF> {System.out.println("DEF " + t.image);}
+        | t = <DO> {System.out.println("DO " + t.image);}
+        | t = <ELSE> {System.out.println("ELSE " + t.image);}
+        | t = <EXTENDS> {System.out.println("EXTENDS " + t.image);}
+        | t = <FALSE> {System.out.println("FALSE " + t.image);}
+        | t = <FINAL> {System.out.println("FINAL " + t.image);}
+        | t = <FINALLY> {System.out.println("FINALLY " + t.image);}
+        | t = <FOR> {System.out.println("FOR " + t.image);}
+        | t = <FORSOME> {System.out.println("FORSOME " + t.image);}
+        | t = <IF> {System.out.println("IF " + t.image);}
+        | t = <IMPLICIT> {System.out.println("IMPLICIT " + t.image);}
+        | t = <IMPORT> {System.out.println("IMPORT " + t.image);}
+        | t = <LAZY> {System.out.println("LAZY " + t.image);}
+        | t = <MACRO> {System.out.println("MACRO " + t.image);}
+        | t = <MATCH> {System.out.println("MATCH " + t.image);}
+        | t = <NEW> {System.out.println("NEW " + t.image);}
+        | t = <NULL> {System.out.println("NULL " + t.image);}
+        | t = <OBJECT> {System.out.println("OBJECT " + t.image);}
+        | t = <OVERRIDE> {System.out.println("OVERRIDE " + t.image);}
+        | t = <PACKAGE> {System.out.println("PACKAGE " + t.image);}
+        | t = <PRIVATE> {System.out.println("PRIVATE " + t.image);}
+        | t = <PROTECTED> {System.out.println("PROTECTED " + t.image);}
+        | t = <RETURN> {System.out.println("RETURN " + t.image);}
+        | t = <SEALED> {System.out.println("SEALED " + t.image);}
+        | t = <SUPER> {System.out.println("SUPER " + t.image);}
+        | t = <THIS> {System.out.println("THIS " + t.image);}
+        | t = <THROW> {System.out.println("THROW " + t.image);}
+        | t = <TRAIT> {System.out.println("TRAIT " + t.image);}
+        | t = <TRY> {System.out.println("TRY " + t.image);}
+        | t = <TRUE> {System.out.println("TRUE " + t.image);}
+        | t = <TYPE> {System.out.println("TYPE " + t.image);}
+        | t = <VAL> {System.out.println("VAL " + t.image);}
+        | t = <VAR> {System.out.println("VAL " + t.image);}
+        | t = <WHILE> {System.out.println("WHILE " + t.image);}
+        | t = <WITH> {System.out.println("WITH " + t.image);}
+        | t = <YIELD> {System.out.println("YIELD " + t.image);}
+        | t = <UNDERSCORE> {System.out.println("UNDERSCORE " + t.image);}
+        | t = <COLON> {System.out.println("COLON " + t.image);}
+        | t = <EQUALS> {System.out.println("EQUALS " + t.image);}
+        | t = <RIGHT_ARROW> {System.out.println("RIGHT_ARROW " + t.image);}
+        | t = <LEFT_ARROW> {System.out.println("LEFT_ARROW " + t.image);}
+        | t = <UPPER_BOUND> {System.out.println("UPPER_BOUND " + t.image);}
+        | t = <VIEW_BOUND> {System.out.println("VIEW_BOUND " + t.image);}
+        | t = <LOWER_BOUND> {System.out.println("LOWER_BOUND " + t.image);}
+        | t = <HASHTAG> {System.out.println("HASHTAG " + t.image);}
+        | t = <ARROBA> {System.out.println("ARROBA " + t.image);}
+
+        // Parenteses
+        | t = <LEFT_PARENTHESIS> {System.out.println("LEFT_PARENTHESIS " + t.image);}
+        | t = <RIGHT_PARENTHESIS> {System.out.println("RIGHT_PARENTHESIS " + t.image);}
+        | t = <LEFT_BRACKETS> {System.out.println("LEFT_BRACKETS " + t.image);}
+        | t = <RIGHT_BRACKETS> {System.out.println("RIGHT_BRACKETS " + t.image);}
+        | t = <LEFT_KEY> {System.out.println("LEFT_KEY " + t.image);}
+        | t = <RIGHT_KEY> {System.out.println("RIGHT_KEY " + t.image);}
+
+        //Delimitadores
+        | t = <BACKTRICK> {System.out.println("BACKTRICK " + t.image);}
+        | t = <APOSTROPHE> {System.out.println("APOSTROPHE " + t.image);}
+        | t = <DOUBLE_QUOTE> {System.out.println("DOUBLE_QUOTE " + t.image);}
+        | t = <DOT> {System.out.println("DOT " + t.image);}
+        | t = <SEMICOLON> {System.out.println("SEMICOLON " + t.image);}
+        | t = <COMMA> {System.out.println("COMMA " + t.image);}
+
+        // Literais Booleanos
+        | t = <BOOLEAN_LITERAL> {System.out.println("BOOLEAN_LITERAL " + t.image);}
+
+        // Caracteres Literais
+        | t = <CHARACTER_LITERAL> {System.out.println("CHARACTER_LITERAL " + t.image);}
+    )*
+    <EOF>
+}
