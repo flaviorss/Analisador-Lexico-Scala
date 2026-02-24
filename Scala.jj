@@ -19,9 +19,11 @@ class Scala {
 PARSER_END(Scala)
 
 SKIP : { " " | "\n" | "\r" | "\r\n" | "\t"}
+SKIP : {<LINE_COMMENT: "//" (~["\n", "\r"])* ( "\n" | "\r" | "\r\n" )?>}
+SKIP : {<MULTIPLE_COMMENT: "/*" (~["*"] | "*" ~["/"])* "*/">}
 
 TOKEN : {
-    // Tokens Auxiliares
+    // -> Tokens Auxiliares
     <#HEXA_DIGIT: ["0"-"9"] | ["A"-"F"] | ["a"-"f"]>
     | <#DIGIT: ["0"-"9"]>
     | <#UPPER: ["A"-"Z"] | ["$"] | ["_"]>
@@ -35,7 +37,7 @@ TOKEN : {
     | <#CHAR_ESCAPE_SEQ: ["\b"] | ["\t"] | ["\n"] | ["\f"] | ["\r"] | ["\""] | ["\\"] | ["\'"]>
     | <CHARACTER_LITERAL: "'" (<PRINTABLE_CHAR> | <CHAR_ESCAPE_SEQ>) "'">
 
-    // Palavras Reservadas
+    // -> Palavras Reservadas
     | <ABSTRACT: "abstract">
     | <CASE: "case">
     | <CATCH: "catch">
@@ -87,7 +89,7 @@ TOKEN : {
     | <HASHTAG: "#">
     | <ARROBA: "@">
 
-    // Parênteses
+    // -> Parênteses
     | <LEFT_PARENTHESIS: "(">
     | <RIGHT_PARENTHESIS: ")">
     | <LEFT_BRACKETS: "[">
@@ -95,7 +97,7 @@ TOKEN : {
     | <LEFT_KEY: "{">
     | <RIGHT_KEY: "}">
 
-    // Delimitadores
+    // -> Delimitadores
     | <BACKTRICK: "`">
     | <APOSTROPHE: "'">
     | <DOUBLE_QUOTE: "\"">
@@ -103,7 +105,7 @@ TOKEN : {
     | <SEMICOLON: ";">
     | <COMMA: ",">
 
-    // Literais Booleanos
+    // -> Literais Booleanos
     | <BOOLEAN_LITERAL: "true" | "false">
 
 }
@@ -112,7 +114,7 @@ void Start() :
 { Token t; }
 {
     (
-        // Palavras Reservadas
+        // -> Palavras Reservadas
         t = <ABSTRACT> {System.out.println("ABSTRACT " + t.image);}
         | t = <CASE> {System.out.println("CASE " + t.image);}
         | t = <CLASS> {System.out.println("CLASS " + t.image);}
@@ -163,7 +165,7 @@ void Start() :
         | t = <HASHTAG> {System.out.println("HASHTAG " + t.image);}
         | t = <ARROBA> {System.out.println("ARROBA " + t.image);}
 
-        // Parenteses
+        // -> Parenteses
         | t = <LEFT_PARENTHESIS> {System.out.println("LEFT_PARENTHESIS " + t.image);}
         | t = <RIGHT_PARENTHESIS> {System.out.println("RIGHT_PARENTHESIS " + t.image);}
         | t = <LEFT_BRACKETS> {System.out.println("LEFT_BRACKETS " + t.image);}
@@ -171,7 +173,7 @@ void Start() :
         | t = <LEFT_KEY> {System.out.println("LEFT_KEY " + t.image);}
         | t = <RIGHT_KEY> {System.out.println("RIGHT_KEY " + t.image);}
 
-        //Delimitadores
+        // -> Delimitadores
         | t = <BACKTRICK> {System.out.println("BACKTRICK " + t.image);}
         | t = <APOSTROPHE> {System.out.println("APOSTROPHE " + t.image);}
         | t = <DOUBLE_QUOTE> {System.out.println("DOUBLE_QUOTE " + t.image);}
@@ -179,10 +181,13 @@ void Start() :
         | t = <SEMICOLON> {System.out.println("SEMICOLON " + t.image);}
         | t = <COMMA> {System.out.println("COMMA " + t.image);}
 
-        // Literais Booleanos
+        // -> Comentários
+        // | t = <COMMENT> {System.out.println("COMMENT " + t.image);}
+
+        // -> Literais Booleanos
         | t = <BOOLEAN_LITERAL> {System.out.println("BOOLEAN_LITERAL " + t.image);}
 
-        // Caracteres Literais
+        // -> Caracteres Literais
         | t = <CHARACTER_LITERAL> {System.out.println("CHARACTER_LITERAL " + t.image);}
     )*
     <EOF>
