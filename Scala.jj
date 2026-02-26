@@ -25,14 +25,15 @@ SKIP : {<MULTIPLE_COMMENT: "/*" (~["*"] | "*" ~["/"])* "*/">}
 TOKEN : {
     // -> Tokens Auxiliares
     <#HEXA_DIGIT: ["0"-"9"] | ["A"-"F"] | ["a"-"f"]>
-    | <#DIGIT: ["0"-"9"]>
+    | <#DIGITS: ["0"-"9"]>
     | <#UPPER: ["A"-"Z"] | ["$"] | ["_"]>
     | <#LOWER: ["a"-"z"]>
     | <#LETTER: (<UPPER> | <LOWER>)>
     | <#PAREN: ["("] | [")"] | ["["] | ["]"] | ["{"] | ["}"]>
     | <#DELIM: ["`"] | ["'"] | ["\""] | ["."] | [";"] | [","]>
-
     | <#OPCHAR: ["!", "#", "%", "&", "*", "+", "-", "/", ":", "<", "=", ">", "?", "@", "\\", "^", "|", "~"]>
+
+    // -> Caracteres Literais
     | <#PRINTABLE_CHAR: ["\u0020" - "\u007F"]>
     | <#CHAR_ESCAPE_SEQ: ["\b"] | ["\t"] | ["\n"] | ["\f"] | ["\r"] | ["\""] | ["\\"] | ["\'"]>
     | <CHARACTER_LITERAL: "'" (<PRINTABLE_CHAR> | <CHAR_ESCAPE_SEQ>) "'">
@@ -105,9 +106,23 @@ TOKEN : {
     | <SEMICOLON: ";">
     | <COMMA: ",">
 
+    // -> Literias Inteiros
+    | <INTERGER_LITERAL: (<DECIMAL_NUMERAL> | <HEXA_NUMERAL>) ("L" | "l")?>
+    | <#DECIMAL_NUMERAL: "0" | <NON_ZERO_DIGIT> (<DIGIT>)* >
+    | <#HEXA_NUMERAL: "0" ("x" | "X") <HEXA_DIGIT> (<HEXA_DIGIT>)* >
+    | <#NON_ZERO_DIGIT: ["1"-"9"]>
+    | <#DIGIT: "0" | <NON_ZERO_DIGIT>>
+
+    // -> Literais de Ponto Flutuante
+    | <#EXPONENT_PART: ("E" | "e") ("+" | "-")? <DIGITS> (<DIGITS>)*>
+    | <#FLOAT_TYPE: ("F" | "f" | "D" | "d")>
+    | <FLOATING_POINT_LITERAL: <DIGITS> (<DIGITS>)* "." <DIGITS> (<DIGITS>)* (<EXPONENT_PART>)? (<FLOAT_TYPE>)?
+                                | "." <DIGITS> (<DIGITS>)* (<EXPONENT_PART>)? (<FLOAT_TYPE>)?
+                                | <DIGITS> (<DIGITS>)* <EXPONENT_PART> (<FLOAT_TYPE>)?
+                                | <DIGITS> (<DIGITS>)* (<EXPONENT_PART>)? <FLOAT_TYPE> >
+
     // -> Literais Booleanos
     | <BOOLEAN_LITERAL: "true" | "false">
-
 }
 
 void Start() :
@@ -180,6 +195,12 @@ void Start() :
         | t = <DOT> {System.out.println("DOT " + t.image);}
         | t = <SEMICOLON> {System.out.println("SEMICOLON " + t.image);}
         | t = <COMMA> {System.out.println("COMMA " + t.image);}
+
+        // -> Literias Inteiros
+        | t = <INTERGER_LITERAL> {System.out.println("INTERGER_LITERAL " + t.image);}
+
+        // -> Literais de Ponto Flutuante
+        | t = <FLOATING_POINT_LITERAL> {System.out.println("FLOATING_POINT_LITERAL " + t.image);}
 
         // -> Comentários
         // | t = <COMMENT> {System.out.println("COMMENT " + t.image);}
