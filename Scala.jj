@@ -33,11 +33,6 @@ TOKEN : {
     | <#DELIM: ["`"] | ["'"] | ["\""] | ["."] | [";"] | [","]>
     | <#OPCHAR: ["!", "#", "%", "&", "*", "+", "-", "/", ":", "<", "=", ">", "?", "@", "\\", "^", "|", "~"]>
 
-    // -> Caracteres Literais
-    | <#PRINTABLE_CHAR: ["\u0020" - "\u007F"]>
-    | <#CHAR_ESCAPE_SEQ: ["\b"] | ["\t"] | ["\n"] | ["\f"] | ["\r"] | ["\""] | ["\\"] | ["\'"]>
-    | <CHARACTER_LITERAL: "'" (<PRINTABLE_CHAR> | <CHAR_ESCAPE_SEQ>) "'">
-
     // -> Palavras Reservadas
     | <ABSTRACT: "abstract">
     | <CASE: "case">
@@ -123,6 +118,20 @@ TOKEN : {
 
     // -> Literais Booleanos
     | <BOOLEAN_LITERAL: "true" | "false">
+
+    // -> Caracteres Literais
+    | <#PRINTABLE_CHAR: ["\u0020" - "\u007F"]>
+    | <#CHAR_ESCAPE_SEQ: ["\b"] | ["\t"] | ["\n"] | ["\f"] | ["\r"] | ["\""] | ["\\"] | ["\'"]>
+    | <CHARACTER_LITERAL: "'" (<PRINTABLE_CHAR> | <CHAR_ESCAPE_SEQ>) "'">
+
+    // -> Strings Literais
+    | <#CHAR_NO_DOUBLE_QUOTE: ["\u0020"-"\u0021", "\u0023"-"\u007F"]>
+    | <#STRING_ELEMENT: <CHAR_NO_DOUBLE_QUOTE> | <CHAR_ESCAPE_SEQ> >
+    | <#MULTI_LINE_CHARS: (("\"")? ("\"")? <CHAR_NO_DOUBLE_QUOTE>)* ("\"")*>
+    | <STRING_LITERAL: "\"" (<STRING_ELEMENT>)* "\"" | "\"\"\"" <MULTI_LINE_CHARS> "\"\"\"">
+
+    // -> Símbolos Literais
+    | <SYMBOL_LITERAL: "'" <PLAINID>>
 }
 
 void Start() :
@@ -210,6 +219,12 @@ void Start() :
 
         // -> Caracteres Literais
         | t = <CHARACTER_LITERAL> {System.out.println("CHARACTER_LITERAL " + t.image);}
+
+        // -> Strings Literais
+        | t = <STRING_LITERAL> {System.out.println("STRING_LITERAL " + t.image);}
+
+        // -> Símbolos Literais
+        | t = <SYMBOL_LITERAL> {System.out.println("SYMBOL_LITERAL " + t.image);}
     )*
     <EOF>
 }
